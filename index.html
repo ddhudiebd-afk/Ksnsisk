@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="fr" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تذاكر مباراة المغرب ضد نيجيريا - CAF 2026</title>
+    <title>Billetterie Maroc vs Nigeria - CAF 2026</title>
     <style>
         :root {
             --caf-gold: #d4af37;
@@ -21,7 +21,6 @@
             padding-bottom: 50px;
         }
 
-        /* رأس الصفحة */
         header {
             background-color: var(--morocco-red);
             padding: 15px;
@@ -33,7 +32,6 @@
 
         .caf-logo { height: 45px; }
 
-        /* قسم المباراة */
         .match-header {
             text-align: center;
             padding: 30px 20px;
@@ -53,7 +51,6 @@
 
         .vs { background: var(--caf-gold); color: black; padding: 5px 10px; border-radius: 50%; font-size: 0.8rem; }
 
-        /* خريطة الملعب SVG */
         .stadium-container {
             background: var(--dark-surface);
             margin: 20px;
@@ -68,7 +65,6 @@
         .zone:hover { fill: var(--caf-gold); }
         .selected-zone { fill: var(--morocco-red) !important; stroke: white; stroke-width: 2px; }
 
-        /* الباقات */
         .packages { padding: 0 20px; }
         .package-card {
             background: var(--dark-surface);
@@ -90,7 +86,6 @@
 
         .price { font-size: 1.2rem; font-weight: bold; color: white; }
 
-        /* الأزرار */
         .footer-action {
             position: fixed;
             bottom: 0;
@@ -113,8 +108,7 @@
             box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
         }
 
-        /* نافذة النجاح */
-        #success-modal {
+        #payment-modal, #success-modal {
             display: none;
             position: fixed;
             top: 50%;
@@ -126,7 +120,26 @@
             border-radius: 20px;
             text-align: center;
             z-index: 100;
-            width: 80%;
+            width: 85%;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .rib-box {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: monospace;
+            font-size: 1.1rem;
+            margin: 15px 0;
+            word-break: break-all;
+            border: 1px dashed #333;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.8em;
+            color: #777;
+            padding: 20px;
         }
     </style>
 </head>
@@ -134,26 +147,26 @@
 
 <header>
     <img src="https://upload.wikimedia.org/wikipedia/en/thumb/5/53/Confederation_of_African_Football_logo.svg/1200px-Confederation_of_African_Football_logo.svg.png" class="caf-logo" alt="CAF">
-    <div style="font-weight: bold; font-size: 0.9rem;">تذاكر المغرب 2026</div>
+    <div style="font-weight: bold; font-size: 0.9rem;">Billets Maroc 2026</div>
 </header>
 
 <div class="match-header">
     <div class="teams-flex">
         <div class="team">
             <img src="https://flagcdn.com/w160/ma.png" class="flag">
-            <div>المغرب</div>
+            <div>Maroc</div>
         </div>
         <div class="vs">VS</div>
         <div class="team">
             <img src="https://flagcdn.com/w160/ng.png" class="flag">
-            <div>نيجيريا</div>
+            <div>Nigeria</div>
         </div>
     </div>
-    <p style="color: var(--text-gray); margin-top: 15px;">ربع النهائي | ملعب طنجة الكبير | 21:00</p>
+    <p style="color: var(--text-gray); margin-top: 15px;">Quart de finale | Grand Stade de Tanger | 21:00</p>
 </div>
 
 <div class="stadium-container">
-    <h3 style="color: var(--caf-gold); font-size: 1rem; margin-top: 0;">اختر منطقة المقعد (محاكاة)</h3>
+    <h3 style="color: var(--caf-gold); font-size: 1rem; margin-top: 0;">Sélectionnez votre zone (Simulation)</h3>
     <svg class="stadium-svg" viewBox="0 0 400 200">
         <path class="zone" d="M100,50 Q200,20 300,50 L320,30 Q200,0 80,30 Z" onclick="selectZone(this)" />
         <path class="zone" d="M100,150 Q200,180 300,150 L320,170 Q200,200 80,170 Z" onclick="selectZone(this)" />
@@ -166,54 +179,80 @@
 <div class="packages">
     <div class="package-card active" onclick="selectPkg(this, 350)">
         <div class="pkg-info">
-            <h4>الباقة الاقتصادية</h4>
-            <p>مقعد مرقم + دخول منطقة المشجعين</p>
+            <h4>Pack Économique</h4>
+            <p>Siège numéroté + Accès Fan Zone</p>
         </div>
         <div class="price">350 DH</div>
     </div>
 
     <div class="package-card" onclick="selectPkg(this, 850)">
         <div class="pkg-info">
-            <h4>الباقة الممتازة</h4>
-            <p>مقعد قريب + وجبة عشاء + موقف سيارات</p>
+            <h4>Pack Premium</h4>
+            <p>Siège proche + Dîner + Parking</p>
         </div>
         <div class="price">850 DH</div>
     </div>
 
     <div class="package-card" onclick="selectPkg(this, 2500)">
         <div class="pkg-info">
-            <h4>باقة VIP الشرفية</h4>
-            <p>لاونج خاص + بوفيه مفتوح + خدمة استقبال</p>
+            <h4>Pack VIP Honneur</h4>
+            <p>Lounge privé + Buffet ouvert + Service d'accueil</p>
         </div>
         <div class="price">2500 DH</div>
     </div>
 </div>
 
 <div class="footer-action">
-    <button class="btn-buy" onclick="showSuccess()">تأكيد الحجز (<span id="final-price">350</span> DH)</button>
+    <button class="btn-buy" onclick="showPayment()">Confirmer la réservation (<span id="final-price">350</span> DH)</button>
+</div>
+
+<div id="payment-modal">
+    <h3 style="color: var(--morocco-red)">Paiement Bancaire</h3>
+    <p>Veuillez envoyer le montant de <b id="pay-amount">350</b> DH au compte suivant (RIB) :</p>
+    <div class="rib-box">837 780 7763654146019479 53</div>
+    <p style="font-size: 0.9rem; color: #333;"><b>Veuillez écrire votre Gmail lors de l'envoi</b> pour recevoir votre ticket virtuel.</p>
+    <button onclick="processFinalStep()" style="background: var(--nigeria-green); color: white; border: none; padding: 15px 30px; border-radius: 10px; font-weight: bold; width: 100%; margin-top: 10px;">Terminer la procédure</button>
 </div>
 
 <div id="success-modal">
-    <h2 style="color: var(--nigeria-green)">تم الحجز بنجاح! ✅</h2>
-    <p>مباراة: المغرب 🇲🇦 ضد نيجيريا 🇳🇬</p>
-    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=CAF2026-MOR-NIG-PROMO" alt="QR Code">
-    <p style="font-size: 0.8rem; color: #666; margin-top: 10px;">أظهر هذا الرمز عند بوابة الملعب</p>
-    <button onclick="location.reload()" style="background: var(--morocco-red); color: white; border: none; padding: 10px 20px; border-radius: 5px;">إغلاق</button>
+    <h2 style="color: var(--nigeria-green)">Ticket émis avec succès ! ✅</h2>
+    <p>ID Ticket: <b id="ticket-id">CAF-MAR-NIG-77291</b></p>
+    <p>Statut: En cours de traitement</p>
+    <img id="qr-img" src="" alt="QR Code" style="margin: 15px 0;">
+    <p style="font-size: 0.8rem; color: #666;">L'accès complet sera activé automatiquement dans 4h.</p>
+    <button onclick="location.reload()" style="background: #333; color: white; border: none; padding: 10px 20px; border-radius: 5px;">Fermer</button>
 </div>
 
+<footer>
+    <p>Powered by CAF & FRMF</p>
+    <p>Ce site est un modèle scolaire de simulation 2026</p>
+</footer>
+
 <script>
+    let selectedPrice = 350;
+
     function selectZone(el) {
         document.querySelectorAll('.zone').forEach(z => z.classList.remove('selected-zone'));
         el.classList.add('selected-zone');
     }
 
     function selectPkg(el, price) {
+        selectedPrice = price;
         document.querySelectorAll('.package-card').forEach(p => p.classList.remove('active'));
         el.classList.add('active');
         document.getElementById('final-price').innerText = price;
     }
 
-    function showSuccess() {
+    function showPayment() {
+        document.getElementById('pay-amount').innerText = selectedPrice;
+        document.getElementById('payment-modal').style.display = 'block';
+    }
+
+    function processFinalStep() {
+        document.getElementById('payment-modal').style.display = 'none';
+        const randomID = "CAF-" + Math.floor(Math.random() * 900000 + 100000);
+        document.getElementById('ticket-id').innerText = randomID;
+        document.getElementById('qr-img').src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + randomID;
         document.getElementById('success-modal').style.display = 'block';
     }
 </script>
