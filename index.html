@@ -1,1 +1,222 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تذاكر مباراة المغرب ضد نيجيريا - CAF 2026</title>
+    <style>
+        :root {
+            --caf-gold: #d4af37;
+            --morocco-red: #c1272d;
+            --nigeria-green: #008751;
+            --dark-surface: #1e1e1e;
+            --text-gray: #b0b0b0;
+        }
 
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: #121212;
+            color: white;
+            margin: 0;
+            padding-bottom: 50px;
+        }
+
+        /* رأس الصفحة */
+        header {
+            background-color: var(--morocco-red);
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        .caf-logo { height: 45px; }
+
+        /* قسم المباراة */
+        .match-header {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(180deg, var(--morocco-red) 0%, #121212 100%);
+        }
+
+        .teams-flex {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .flag { width: 60px; height: 40px; border-radius: 5px; object-fit: cover; border: 2px solid white; }
+
+        .vs { background: var(--caf-gold); color: black; padding: 5px 10px; border-radius: 50%; font-size: 0.8rem; }
+
+        /* خريطة الملعب SVG */
+        .stadium-container {
+            background: var(--dark-surface);
+            margin: 20px;
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        .stadium-svg { width: 100%; max-width: 350px; filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.2)); }
+        
+        .zone { cursor: pointer; transition: 0.3s; fill: #444; }
+        .zone:hover { fill: var(--caf-gold); }
+        .selected-zone { fill: var(--morocco-red) !important; stroke: white; stroke-width: 2px; }
+
+        /* الباقات */
+        .packages { padding: 0 20px; }
+        .package-card {
+            background: var(--dark-surface);
+            border: 1px solid #333;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .package-card.active { border-color: var(--caf-gold); background: #2a2a2a; transform: scale(1.02); }
+
+        .pkg-info h4 { margin: 0; color: var(--caf-gold); font-size: 1.1rem; }
+        .pkg-info p { margin: 5px 0 0; font-size: 0.85rem; color: var(--text-gray); }
+
+        .price { font-size: 1.2rem; font-weight: bold; color: white; }
+
+        /* الأزرار */
+        .footer-action {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: #1e1e1e;
+            padding: 15px 0;
+            text-align: center;
+            border-top: 1px solid #333;
+        }
+
+        .btn-buy {
+            background: var(--caf-gold);
+            color: black;
+            border: none;
+            padding: 15px 60px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+        }
+
+        /* نافذة النجاح */
+        #success-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            color: black;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            z-index: 100;
+            width: 80%;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/5/53/Confederation_of_African_Football_logo.svg/1200px-Confederation_of_African_Football_logo.svg.png" class="caf-logo" alt="CAF">
+    <div style="font-weight: bold; font-size: 0.9rem;">تذاكر المغرب 2026</div>
+</header>
+
+<div class="match-header">
+    <div class="teams-flex">
+        <div class="team">
+            <img src="https://flagcdn.com/w160/ma.png" class="flag">
+            <div>المغرب</div>
+        </div>
+        <div class="vs">VS</div>
+        <div class="team">
+            <img src="https://flagcdn.com/w160/ng.png" class="flag">
+            <div>نيجيريا</div>
+        </div>
+    </div>
+    <p style="color: var(--text-gray); margin-top: 15px;">ربع النهائي | ملعب طنجة الكبير | 21:00</p>
+</div>
+
+<div class="stadium-container">
+    <h3 style="color: var(--caf-gold); font-size: 1rem; margin-top: 0;">اختر منطقة المقعد (محاكاة)</h3>
+    <svg class="stadium-svg" viewBox="0 0 400 200">
+        <path class="zone" d="M100,50 Q200,20 300,50 L320,30 Q200,0 80,30 Z" onclick="selectZone(this)" />
+        <path class="zone" d="M100,150 Q200,180 300,150 L320,170 Q200,200 80,170 Z" onclick="selectZone(this)" />
+        <path class="zone" d="M80,40 Q50,100 80,160 L60,170 Q20,100 60,30 Z" onclick="selectZone(this)" />
+        <path class="zone" d="M320,40 Q350,100 320,160 L340,170 Q380,100 340,30 Z" onclick="selectZone(this)" />
+        <rect x="120" y="60" width="160" height="80" fill="#2e7d32" rx="5" />
+    </svg>
+</div>
+
+<div class="packages">
+    <div class="package-card active" onclick="selectPkg(this, 350)">
+        <div class="pkg-info">
+            <h4>الباقة الاقتصادية</h4>
+            <p>مقعد مرقم + دخول منطقة المشجعين</p>
+        </div>
+        <div class="price">350 DH</div>
+    </div>
+
+    <div class="package-card" onclick="selectPkg(this, 850)">
+        <div class="pkg-info">
+            <h4>الباقة الممتازة</h4>
+            <p>مقعد قريب + وجبة عشاء + موقف سيارات</p>
+        </div>
+        <div class="price">850 DH</div>
+    </div>
+
+    <div class="package-card" onclick="selectPkg(this, 2500)">
+        <div class="pkg-info">
+            <h4>باقة VIP الشرفية</h4>
+            <p>لاونج خاص + بوفيه مفتوح + خدمة استقبال</p>
+        </div>
+        <div class="price">2500 DH</div>
+    </div>
+</div>
+
+<div class="footer-action">
+    <button class="btn-buy" onclick="showSuccess()">تأكيد الحجز (<span id="final-price">350</span> DH)</button>
+</div>
+
+<div id="success-modal">
+    <h2 style="color: var(--nigeria-green)">تم الحجز بنجاح! ✅</h2>
+    <p>مباراة: المغرب 🇲🇦 ضد نيجيريا 🇳🇬</p>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=CAF2026-MOR-NIG-PROMO" alt="QR Code">
+    <p style="font-size: 0.8rem; color: #666; margin-top: 10px;">أظهر هذا الرمز عند بوابة الملعب</p>
+    <button onclick="location.reload()" style="background: var(--morocco-red); color: white; border: none; padding: 10px 20px; border-radius: 5px;">إغلاق</button>
+</div>
+
+<script>
+    function selectZone(el) {
+        document.querySelectorAll('.zone').forEach(z => z.classList.remove('selected-zone'));
+        el.classList.add('selected-zone');
+    }
+
+    function selectPkg(el, price) {
+        document.querySelectorAll('.package-card').forEach(p => p.classList.remove('active'));
+        el.classList.add('active');
+        document.getElementById('final-price').innerText = price;
+    }
+
+    function showSuccess() {
+        document.getElementById('success-modal').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
