@@ -3,258 +3,212 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Billetterie Maroc vs Nigeria - CAF 2026</title>
+    <title>Portail Officiel Billetterie - CAN 2026</title>
     <style>
         :root {
             --caf-gold: #d4af37;
             --morocco-red: #c1272d;
-            --nigeria-green: #008751;
-            --dark-surface: #1e1e1e;
-            --text-gray: #b0b0b0;
+            --dark-bg: #0f0f0f;
+            --card-gray: #1a1a1a;
+            --success-green: #28a745;
         }
 
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background-color: #121212;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--dark-bg);
             color: white;
             margin: 0;
-            padding-bottom: 50px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         header {
             background-color: var(--morocco-red);
             padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        }
-
-        .caf-logo { height: 45px; }
-
-        .match-header {
             text-align: center;
-            padding: 30px 20px;
-            background: linear-gradient(180deg, var(--morocco-red) 0%, #121212 100%);
-        }
-
-        .teams-flex {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            font-size: 1.5rem;
+            border-bottom: 3px solid var(--caf-gold);
             font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
         }
 
-        .flag { width: 60px; height: 40px; border-radius: 5px; object-fit: cover; border: 2px solid white; }
+        .container { max-width: 450px; margin: auto; padding: 20px; width: 100%; box-sizing: border-box; }
 
-        .vs { background: var(--caf-gold); color: black; padding: 5px 10px; border-radius: 50%; font-size: 0.8rem; }
+        .step-section { display: none; animation: fadeIn 0.5s ease; }
+        .active { display: block; }
 
-        .stadium-container {
-            background: var(--dark-surface);
-            margin: 20px;
-            padding: 20px;
-            border-radius: 20px;
-            text-align: center;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .stadium-svg { width: 100%; max-width: 350px; filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.2)); }
-        
-        .zone { cursor: pointer; transition: 0.3s; fill: #444; }
-        .zone:hover { fill: var(--caf-gold); }
-        .selected-zone { fill: var(--morocco-red) !important; stroke: white; stroke-width: 2px; }
-
-        .packages { padding: 0 20px; }
-        .package-card {
-            background: var(--dark-surface);
+        .card { 
+            background: var(--card-gray); 
+            border-radius: 15px; 
+            padding: 20px; 
+            margin-bottom: 20px; 
             border: 1px solid #333;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: 0.3s;
-            cursor: pointer;
         }
 
-        .package-card.active { border-color: var(--caf-gold); background: #2a2a2a; transform: scale(1.02); }
-
-        .pkg-info h4 { margin: 0; color: var(--caf-gold); font-size: 1.1rem; }
-        .pkg-info p { margin: 5px 0 0; font-size: 0.85rem; color: var(--text-gray); }
-
-        .price { font-size: 1.2rem; font-weight: bold; color: white; }
-
-        .footer-action {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background: #1e1e1e;
-            padding: 15px 0;
-            text-align: center;
-            border-top: 1px solid #333;
+        .input-field { margin-bottom: 15px; }
+        .input-field label { display: block; font-size: 0.8rem; color: #888; margin-bottom: 5px; }
+        .input-field input { 
+            width: 100%; padding: 12px; background: #252525; border: 1px solid #444; 
+            border-radius: 8px; color: white; box-sizing: border-box; outline: none;
         }
 
-        .btn-buy {
-            background: var(--caf-gold);
-            color: black;
-            border: none;
-            padding: 15px 60px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+        .pkg-btn {
+            background: #252525; border: 1px solid #444; padding: 15px; border-radius: 10px; 
+            margin-bottom: 10px; cursor: pointer; display: flex; justify-content: space-between;
+            transition: 0.3s; align-items: center;
         }
+        .pkg-btn.selected { border-color: var(--caf-gold); background: #333; }
 
-        #payment-modal, #success-modal {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            color: black;
-            padding: 30px;
-            border-radius: 20px;
-            text-align: center;
-            z-index: 100;
-            width: 85%;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        .btn-main {
+            background: var(--caf-gold); color: black; border: none; padding: 15px;
+            border-radius: 30px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px;
+            font-size: 1rem; text-transform: uppercase;
         }
 
         .rib-box {
-            background: #f0f0f0;
-            padding: 15px;
-            border-radius: 10px;
-            font-family: monospace;
-            font-size: 1.1rem;
-            margin: 15px 0;
-            word-break: break-all;
-            border: 1px dashed #333;
+            background: #f8f9fa; color: #333; padding: 15px; border-radius: 10px;
+            font-family: monospace; font-size: 1rem; margin: 15px 0;
+            border: 2px dashed var(--morocco-red); word-break: break-all; font-weight: bold;
         }
 
-        footer {
-            text-align: center;
-            font-size: 0.8em;
-            color: #777;
-            padding: 20px;
+        .notice {
+            font-size: 0.8rem; background: #fff3cd; color: #856404;
+            padding: 10px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ffeeba;
         }
+
+        #countdown { color: #ff4d4d; font-weight: bold; font-size: 1.5rem; margin: 10px 0; }
     </style>
 </head>
 <body>
 
-<header>
-    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/5/53/Confederation_of_African_Football_logo.svg/1200px-Confederation_of_African_Football_logo.svg.png" class="caf-logo" alt="CAF">
-    <div style="font-weight: bold; font-size: 0.9rem;">Billets Maroc 2026</div>
-</header>
+<header>Billetterie Officielle - Phase Finale</header>
 
-<div class="match-header">
-    <div class="teams-flex">
-        <div class="team">
-            <img src="https://flagcdn.com/w160/ma.png" class="flag">
-            <div>Maroc</div>
-        </div>
-        <div class="vs">VS</div>
-        <div class="team">
-            <img src="https://flagcdn.com/w160/ng.png" class="flag">
-            <div>Nigeria</div>
+<div class="container">
+
+    <div id="step1" class="step-section active">
+        <div class="card" style="text-align: center;">
+            <span style="background: #ff4d4d; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: bold;">DISPONIBILITÉ LIMITÉE</span>
+            <h2 style="color: var(--caf-gold); margin: 15px 0 5px;">DEMI-FINALE</h2>
+            <p style="margin-top: 0; color: #aaa;">Maroc vs Nigeria</p>
+            <p style="font-size: 0.9rem;">Votre session expirera dans :</p>
+            <div id="countdown">15:00</div>
+            <button class="btn-main" onclick="nextStep(2)">Démarrer la réservation</button>
         </div>
     </div>
-    <p style="color: var(--text-gray); margin-top: 15px;">Quart de finale | Grand Stade de Tanger | 21:00</p>
-</div>
 
-<div class="stadium-container">
-    <h3 style="color: var(--caf-gold); font-size: 1rem; margin-top: 0;">Sélectionnez votre zone (Simulation)</h3>
-    <svg class="stadium-svg" viewBox="0 0 400 200">
-        <path class="zone" d="M100,50 Q200,20 300,50 L320,30 Q200,0 80,30 Z" onclick="selectZone(this)" />
-        <path class="zone" d="M100,150 Q200,180 300,150 L320,170 Q200,200 80,170 Z" onclick="selectZone(this)" />
-        <path class="zone" d="M80,40 Q50,100 80,160 L60,170 Q20,100 60,30 Z" onclick="selectZone(this)" />
-        <path class="zone" d="M320,40 Q350,100 320,160 L340,170 Q380,100 340,30 Z" onclick="selectZone(this)" />
-        <rect x="120" y="60" width="160" height="80" fill="#2e7d32" rx="5" />
-    </svg>
-</div>
-
-<div class="packages">
-    <div class="package-card active" onclick="selectPkg(this, 350)">
-        <div class="pkg-info">
-            <h4>Pack Économique</h4>
-            <p>Siège numéroté + Accès Fan Zone</p>
+    <div id="step2" class="step-section">
+        <h3>Identification</h3>
+        <div class="card">
+            <div class="input-field">
+                <label>Nom complet (Selon la CIN)</label>
+                <input type="text" id="user-name" placeholder="Ex: Ahmed El Mansouri">
+            </div>
+            <div class="input-field">
+                <label>E-mail Gmail (Obligatoire pour le e-ticket)</label>
+                <input type="email" id="user-email" placeholder="votrename@gmail.com">
+            </div>
+            <button class="btn-main" onclick="validateAndNext()">Suivant</button>
         </div>
-        <div class="price">350 DH</div>
     </div>
 
-    <div class="package-card" onclick="selectPkg(this, 850)">
-        <div class="pkg-info">
-            <h4>Pack Premium</h4>
-            <p>Siège proche + Dîner + Parking</p>
+    <div id="step3" class="step-section">
+        <h3>Sélection de la Catégorie</h3>
+        <div class="card">
+            <div class="pkg-btn" onclick="selectCat(this, 'Catégorie 1', '350')">
+                <span>Tribune Latérale</span> <b>350 DH</b>
+            </div>
+            <div class="pkg-btn" onclick="selectCat(this, 'Premium', '750')">
+                <span>Confort + Snack</span> <b>750 DH</b>
+            </div>
+            <div class="pkg-btn" onclick="selectCat(this, 'VIP Lounge', '2500')">
+                <span>Loge VIP Royale</span> <b>2500 DH</b>
+            </div>
+            <button class="btn-main" id="final-btn" disabled onclick="nextStep(4)">Procéder au paiement</button>
         </div>
-        <div class="price">850 DH</div>
     </div>
 
-    <div class="package-card" onclick="selectPkg(this, 2500)">
-        <div class="pkg-info">
-            <h4>Pack VIP Honneur</h4>
-            <p>Lounge privé + Buffet ouvert + Service d'accueil</p>
+    <div id="step4" class="step-section">
+        <h3>Règlement de la commande</h3>
+        <div class="card" style="background: white; color: black; text-align: center;">
+            <p>Montant total : <strong><span id="pay-total"></span> DH</strong></p>
+            <p style="font-size: 0.9rem;">Veuillez effectuer le virement vers ce RIB :</p>
+            <div class="rib-box">837 780 7763654146019479 53</div>
+            <div class="notice">
+                <strong>IMPORTANT :</strong> Mentionnez votre <strong>Gmail</strong> dans le motif du virement pour recevoir votre ticket.
+            </div>
+            <button class="btn-main" onclick="showProcessing()">J'ai envoyé le paiement</button>
         </div>
-        <div class="price">2500 DH</div>
     </div>
-</div>
 
-<div class="footer-action">
-    <button class="btn-buy" onclick="showPayment()">Confirmer la réservation (<span id="final-price">350</span> DH)</button>
-</div>
+    <div id="step5" class="step-section">
+        <div class="card" style="text-align: center; border-color: var(--caf-gold); padding: 40px 20px;">
+            <div style="font-size: 3.5rem; margin-bottom: 20px;">⌛</div>
+            <h2 style="color: var(--caf-gold); margin-bottom: 15px;">Demande en cours...</h2>
+            <p style="font-size: 1rem; line-height: 1.6; color: #eee;">
+                Merci <strong><span id="finish-name"></span></strong>, nous avons bien reçu votre demande. 
+            </p>
+            <div style="padding: 20px; background: #222; border-radius: 12px; margin: 25px 0; border: 1px solid #444;">
+                <p style="font-size: 0.95rem; color: #fff; margin: 0; font-weight: 500;">
+                    Nous allons traiter votre demande très prochainement.
+                </p>
+                <p style="font-size: 0.85rem; color: #aaa; margin-top: 10px;">
+                    Une fois le virement validé, votre e-ticket sera envoyé sur votre adresse <strong>Gmail</strong> (Délai estimé : 4h).
+                </p>
+            </div>
+            <p style="font-size: 0.75rem; color: #666; letter-spacing: 1px;">Réf. Dossier : #CAN26-PR77</p>
+            <button class="btn-main" style="background: #333; color: white; margin-top: 20px;" onclick="location.reload()">Quitter le portail</button>
+        </div>
+    </div>
 
-<div id="payment-modal">
-    <h3 style="color: var(--morocco-red)">Paiement Bancaire</h3>
-    <p>Veuillez envoyer le montant de <b id="pay-amount">350</b> DH au compte suivant (RIB) :</p>
-    <div class="rib-box">837 780 7763654146019479 53</div>
-    <p style="font-size: 0.9rem; color: #333;"><b>Veuillez écrire votre Gmail lors de l'envoi</b> pour recevoir votre ticket virtuel.</p>
-    <button onclick="processFinalStep()" style="background: var(--nigeria-green); color: white; border: none; padding: 15px 30px; border-radius: 10px; font-weight: bold; width: 100%; margin-top: 10px;">Terminer la procédure</button>
 </div>
-
-<div id="success-modal">
-    <h2 style="color: var(--nigeria-green)">Ticket émis avec succès ! ✅</h2>
-    <p>ID Ticket: <b id="ticket-id">CAF-MAR-NIG-77291</b></p>
-    <p>Statut: En cours de traitement</p>
-    <img id="qr-img" src="" alt="QR Code" style="margin: 15px 0;">
-    <p style="font-size: 0.8rem; color: #666;">L'accès complet sera activé automatiquement dans 4h.</p>
-    <button onclick="location.reload()" style="background: #333; color: white; border: none; padding: 10px 20px; border-radius: 5px;">Fermer</button>
-</div>
-
-<footer>
-    <p>Powered by CAF & FRMF</p>
-    <p>Ce site est un modèle scolaire de simulation 2026</p>
-</footer>
 
 <script>
-    let selectedPrice = 350;
+    let reservationData = { name: "", email: "", price: "" };
 
-    function selectZone(el) {
-        document.querySelectorAll('.zone').forEach(z => z.classList.remove('selected-zone'));
-        el.classList.add('selected-zone');
+    function nextStep(s) {
+        document.querySelectorAll('.step-section').forEach(sec => sec.classList.remove('active'));
+        document.getElementById('step' + s).classList.add('active');
+        window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
-    function selectPkg(el, price) {
-        selectedPrice = price;
-        document.querySelectorAll('.package-card').forEach(p => p.classList.remove('active'));
-        el.classList.add('active');
-        document.getElementById('final-price').innerText = price;
+    function validateAndNext() {
+        const name = document.getElementById('user-name').value;
+        const email = document.getElementById('user-email').value;
+        if(name.length < 3 || !email.includes('@')) return alert("Veuillez remplir les champs correctement.");
+        reservationData.name = name;
+        reservationData.email = email;
+        nextStep(3);
     }
 
-    function showPayment() {
-        document.getElementById('pay-amount').innerText = selectedPrice;
-        document.getElementById('payment-modal').style.display = 'block';
+    function selectCat(el, category, price) {
+        document.querySelectorAll('.pkg-btn').forEach(b => b.classList.remove('selected'));
+        el.classList.add('selected');
+        reservationData.price = price;
+        document.getElementById('pay-total').innerText = price;
+        document.getElementById('final-btn').disabled = false;
     }
 
-    function processFinalStep() {
-        document.getElementById('payment-modal').style.display = 'none';
-        const randomID = "CAF-" + Math.floor(Math.random() * 900000 + 100000);
-        document.getElementById('ticket-id').innerText = randomID;
-        document.getElementById('qr-img').src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + randomID;
-        document.getElementById('success-modal').style.display = 'block';
+    function showProcessing() {
+        document.getElementById('finish-name').innerText = reservationData.name;
+        nextStep(5);
     }
+
+    // Timer logic
+    let timeLeft = 900; 
+    setInterval(() => {
+        if(timeLeft <= 0) return;
+        timeLeft--;
+        let min = Math.floor(timeLeft / 60);
+        let sec = timeLeft % 60;
+        document.getElementById('countdown').innerText = `${min}:${sec < 10 ? '0' : ''}${sec}`;
+    }, 1000);
 </script>
 
 </body>
